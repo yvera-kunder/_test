@@ -14,43 +14,23 @@ angular.module('starter.controllers', [])
             a.download = 'somefilename4.jpg';
             a.click();
             // window.open(a.href+'/'+a.download,'_system');
-
-
-
-          cordova.plugins.photoLibrary.requestAuthorization(
-            function () {
-                          cordova.plugins.photoLibrary.saveImage(a.href, 'a', function () {
-                          console.log('ok')
-                        }, function (err) {
-                          console.log(err)
-                      });
+            var targetPath = cordova.file.externalDataDirectory + a.download;
+            var ft = new FileTransfer();
+            ft.download(a.href,targetPath,
+            function(entry) {
+                console.log("download complete: " + entry.toURL());
             },
-            function (err) {
-              // User denied the access
-            }, // if options not provided, defaults to {read: true}.
+            function(error) {
+                console.log("download error source " + error.source);
+                console.log("download error target " + error.target);
+                console.log("download error code" + error.code);
+            },
+            false,
             {
-              read: true,
-              write: true
-            }
-          );
-
-            // var targetPath = cordova.file.documentDiectory + a.download;
-            // var ft = new FileTransfer();
-            // ft.download(a.href,targetPath,
-            // function(entry) {
-            //     console.log("download complete: " + entry.toURL());
-            // },
-            // function(error) {
-            //     console.log("download error source " + error.source);
-            //     console.log("download error target " + error.target);
-            //     console.log("download error code" + error.code);
-            // },
-            // false,
-            // {
-            //     headers: {
-            //         "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
-            //     }
-            // })
+                headers: {
+                    "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+                }
+            })
             // $cordovaFileTransfer.download(a.href, targetPath, options, trustHosts)
             //   .then(function(result) {
             //     // Success!
